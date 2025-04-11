@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase File Upload</title>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+    #status { margin-top: 10px; min-height: 20px; padding: 10px; border-radius: 4px; }
+    .success { background: #e6ffed; color: #2ea44f; }
+    .error { background: #ffebee; color: #d32f2f; }
+    progress { width: 100%; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Upload to Firebase</h1>
+  <input type="file" id="fileInput">
+  <button id="uploadBtn">Upload</button>
+  <progress id="progressBar" value="0" max="100" hidden></progress>
+  <div id="status"></div>
+
+  <script>
+    // Your Firebase Config (replace with yours)
+    const firebaseConfig = {
+      apiKey: "AIzaSyASdDUd46MXGG8kxPqiy_bbQV48HbTmtBo",
+      authDomain: "nikku-e100e.firebaseapp.com",
+      projectId: "nikku-e100e",
+      storageBucket: "nikku-e100e.appspot.com",
+      messagingSenderId: "395855015644",
+      appId: "1:395855015644:web:2366e480fe7ad0944dce19"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const storage = firebase.storage();
+
+    document.getElementById('uploadBtn').addEventListener('click', async () => {
+      const file = document.getElementById('fileInput').files[0];
+      const statusDiv = document.getElementById('status');
+      const progressBar = document.getElementById('progressBar');
+
+      if (!file) {
+        showStatus('Please select a file first', 'error');
+        return;
+      }
+
+      try {
+        // Generate unique filename
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        
+        // Show progress
+        progressBar.hidden = false;
+        showStatus('Uploading...');
+
+        // Upload to Firebase Storage
+        const storageRef = storage.ref(`uploads/${fileName}`);
+        const uploadTask = storageRef.put(file);
+
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            // Track progress
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progressBar.value = progress;
+          },
+          (error) => {
+            // Handle errors
+            handleUploadError(error);
+          },
+          () => {
+            // Upload complete
+            uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+              showStatus(`Upload successful! URL: ${url}`, 'success');
+              progressBar.hidden = true;
+              console.log('File available at:', url);
+            });
+          }
+        );
+
+      } catch (error) {
+        handleUploadError(error);
+      }
+    });
+
+    function handleUploadError(error) {
+      console.error('Upload failed:', error);
+      let message = 'Upload failed: ';
+      
+      switch(error.code) {
+        case 'storage/unauthorized':
+          message += 'No permission to upload';
+          break;
+        case 'storage/canceled':
+          message += 'Upload canceled';
+          break;
+        case 'storage/unknown':
+          message += 'Network error';
+          break;
+        default:
+          message += error.message;
+      }
+      
+      showStatus(message, 'error');
+      document.getElementById('progressBar').hidden = true;
+    }
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = message;
+      statusDiv.className = type || '';
+    }
+  </script>
+</body>
+</html>
