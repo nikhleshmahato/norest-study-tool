@@ -1,108 +1,227 @@
-        <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Modern Login Form </title>
-        <style>
-            /* Existing CSS */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: Arial, sans-serif;
-            }
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background: linear-gradient(135deg, #6e8efb, #a777e3);
-            }
-            .login-container {
-                background: white;
-                padding: 2rem;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                width: 300px;
-                text-align: center;
-            }
-            .login-container h2 {
-                margin-bottom: 1rem;
-                color: #333;
-            }
-
-            .input-group {
-                margin-bottom: 1rem;
-                text-align: left;
-            }
-            .input-group label {
-                display: block;
-                font-size: 14px;
-                margin-bottom: 5px;
-                color: #555;
-            }
-            .input-group input {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                outline: none;
-                transition: 0.3s;
-            }
-            .input-group input:focus {
-                border-color: #6e8efb;
-                box-shadow: 0 0 5px rgba(110, 142, 251, 0.5);
-            }
-            .login-btn, .subdomain-btn {
-                width: 100%;
-                padding: 10px;
-                border: none;
-                border-radius: 5px;
-                color: white;
-                font-size: 16px;
-                cursor: pointer;
-                transition: 0.3s;
-                text-align: center;
-                display: inline-block;
-                text-decoration: none;
-            }
-            .login-btn {
-                background: #6e8efb;
-            }
-            .login-btn:hover {
-                background: #5a7be8;
-            }
-            .subdomain-btn {
-                background: #28a745;
-                margin-top: 10px;
-            }
-            .subdomain-btn:hover {
-                background: #218838;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="login-container">
-            <h2>Login</h2>
-            <form>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="login-btn">Login</button>
-            </form>
-            <a href="home.html" class="subdomain-btn">LogIn as guest </a>
-        </div>
-        
-    </body>
-    </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     
-
-
-      
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #43cea2, #185a9d, #6713d2);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
     
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .login-container {
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    h1 {
+      text-align: center;
+      color: white;
+      margin-bottom: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      font-size: 1rem;
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(45deg, #FF416C, #FF4B2B, #FF9D2F, #FFAF7B);
+      background-size: 300% 300%;
+      animation: vibrantBtn 5s ease infinite;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+    }
+    
+    @keyframes vibrantBtn {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(255, 75, 43, 0.6);
+    }
+    
+    button:active {
+      transform: translateY(-1px);
+    }
+    
+    #message {
+      text-align: center;
+      margin-top: 1.2rem;
+      min-height: 24px;
+      font-size: 0.9rem;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .success {
+      color: #4eff91 !important;
+    }
+    
+    .error {
+      color: #ff7e7e !important;
+    }
+
+    .glow {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.7s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container fade-in floating glow">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    // Add animation when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.login-container').classList.add('fade-in');
+    });
+
+    // Sample user data (for demonstration - in a real app, this would come from a server)
+    const users = [
+      { username: "user1", password: "pass1" },
+      { username: "admin", password: "admin123" },
+      { username: "test", password: "test123" }
+    ];
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+
+      // Show loading state
+      const button = e.target.querySelector('button');
+      const originalText = button.textContent;
+      button.textContent = "Signing in...";
+      button.disabled = true;
+
+      // Simulate network delay for better UX feedback
+      setTimeout(() => {
+        try {
+          // Check if credentials match
+          const user = users.find(u => u.username === username && u.password === password);
+
+          if (user) {
+            message.textContent = "✅ Login successful! Redirecting...";
+            message.className = "success";
+            
+            // Redirect after a brief delay
+            setTimeout(() => {
+              window.location.href = "home.html";
+            }, 1000);
+          } else {
+            message.textContent = "❌ Invalid username or password!";
+            message.className = "error";
+            
+            // Reset button
+            button.textContent = originalText;
+            button.disabled = false;
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          message.textContent = "An error occurred. Please try again.";
+          message.className = "error";
+          
+          // Reset button
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      }, 800);
+    });
+  </script>
+</body>
+</html>
