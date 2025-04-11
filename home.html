@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoReSt - Notes Repository & Study Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7f9;
+      color: #212529;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* Background patterns */
+    .bg-pattern {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .pattern-1 {
+      top: 10%;
+      left: 5%;
+      width: 120px;
+      height: 120px;
+      background-image: radial-gradient(#e9ecef 2px, transparent 2px);
+      background-size: 18px 18px;
+    }
+
+    .pattern-2 {
+      bottom: 15%;
+      right: 5%;
+      width: 150px;
+      height: 150px;
+      background-image: radial-gradient(#dee2e6 2px, transparent 2px);
+      background-size: 22px 22px;
+    }
+
+    .pattern-3 {
+      top: 50%;
+      left: 15%;
+      width: 80px;
+      height: 80px;
+      background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%), 
+                        linear-gradient(-45deg, #e9ecef 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #e9ecef 75%),
+                        linear-gradient(-45deg, transparent 75%, #e9ecef 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 5%;
+      background-color: #ffffff;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo span {
+      color: #066ac9;
+    }
+
+    .logo i {
+      color: #066ac9;
+      margin-right: 8px;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #5c6670;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+    }
+
+    .nav-links li a:hover {
+      color: #066ac9;
+      background-color: rgba(6, 106, 201, 0.05);
+    }
+
+    .right-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background-color: #f1f3f5;
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.9rem;
+      width: 150px;
+    }
+
+    .search-box i {
+      color: #adb5bd;
+      cursor: pointer;
+    }
+
+    .search-box i:hover {
+      color: #066ac9;
+    }
+
+    .profile-icon {
+      width: 35px;
+      height: 35px;
+      background-color: #e91e63;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .profile-icon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 3px 10px rgba(233, 30, 99, 0.2);
+    }
+
+    .menu-toggle {
+      font-size: 1.5rem;
+      display: none;
+      cursor: pointer;
+      color: #333;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding-top: 100px;
+      padding-bottom: 50px;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 5%;
+      padding-right: 5%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative elements */
+    .shape {
+      position: absolute;
+      z-index: 0;
+    }
+
+    .shape-1 {
+      top: 10%;
+      left: 5%;
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 193, 7, 0.2);
+      border-radius: 50%;
+    }
+
+    .shape-2 {
+      bottom: 15%;
+      left: 10%;
+      width: 25px;
+      height: 25px;
+      background-color: rgba(6, 106, 201, 0.2);
+      border-radius: 50%;
+    }
+
+    .shape-3 {
+      top: 30%;
+      right: 8%;
+      width: 35px;
+      height: 35px;
+      background-color: rgba(40, 167, 69, 0.2);
+      border-radius: 50%;
+    }
+
+    .shape-4 {
+      bottom: 30%;
+      right: 20%;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(111, 66, 193, 0.2) 0%, rgba(40, 167, 69, 0.2) 100%);
+      border-radius: 8px;
+      transform: rotate(45deg);
+    }
+
+    .shape-5 {
+      top: 20%;
+      left: 25%;
+      width: 30px;
+      height: 30px;
+      background-color: rgba(233, 30, 99, 0.2);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .hero-content {
+      max-width: 500px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .hero-image {
+      position: relative;
+      width: 45%;
+      z-index: 1;
+    }
+
+    .hero-image img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .floating-element {
+      position: absolute;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      z-index: 2;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .voice-badge {
+      position: absolute;
+      top: 15%;
+      right: 20%;
+      background-color: #ffffff;
+      color: #333;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      z-index: 2;
+      animation: float 3s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .voice-badge i {
+      color: #e91e63;
+      font-size: 1rem;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .note-badge {
+      position: absolute;
+      bottom: 15%;
+      right: 30%;
+      background-color: #ffffff;
+      color: #333;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      z-index: 2;
+      animation: fadeInUp 0.8s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note-badge i {
+      color: #066ac9;
+      font-size: 1rem;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+      color: #212529;
+      line-height: 1.2;
+    }
+
+    .highlight {
+      background: linear-gradient(transparent 60%, #ffc107 40%);
+      display: inline;
+      padding: 0 5px;
+      position: relative;
+    }
+
+    .highlight::after {
+      content: '';
+      position: absolute;
+      width: 110%;
+      height: 8px;
+      background-color: rgba(255, 193, 7, 0.5);
+      bottom: 5px;
+      left: -5%;
+      z-index: -1;
+      border-radius: 10px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 1.8rem;
+      color: #6c757d;
+      line-height: 1.7;
+    }
+
+    .features-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.8rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #495057;
+      transition: all 0.3s;
+      flex-basis: 45%;
+    }
+
+    .feature-item:hover {
+      transform: translateX(3px);
+    }
+
+    .feature-item i {
+      color: #066ac9;
+      background-color: rgba(6, 106, 201, 0.1);
+      padding: 6px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      z-index: -1;
+    }
+
+    .btn:hover::before {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #066ac9 0%, #0559a6 100%);
+      color: white;
+      box-shadow: 0 5px 15px rgba(6, 106, 201, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(6, 106, 201, 0.4);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 2px solid #e9ecef;
+      color: #495057;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-outline2 {
+      background-color: transparent;
+      border: 2px solid #e9ecef;
+      color: #495057;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      background: linear-gradient(135deg, #e91e63 0%, #d81558 100%);
+      color: white;
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+      border: none;
+    }
+
+    .btn-outline2:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+    }
+
+    .btn-icon {
+      width: 30px;
+      height: 30px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon i {
+      color: white;
+      font-size: 0.8rem;
+    }
+
+    /* Features Section */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 2rem 5%;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+      gap: 20px;
+    }
+
+    .feature-card {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 1.8rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      width: calc(50% - 10px);
+      display: flex;
+      gap: 1.5rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, #066ac9, #0559a6);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: rotate(10deg) scale(1.1);
+    }
+
+    .blue-bg {
+      background-color: rgba(6, 106, 201, 0.1);
+      color: #066ac9;
+    }
+
+    .purple-bg {
+      background-color: rgba(111, 66, 193, 0.1);
+      color: #6f42c1;
+    }
+
+    .green-bg {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .pink-bg {
+      background-color: rgba(233, 30, 99, 0.1);
+      color: #e91e63;
+    }
+
+    .feature-content {
+      flex: 1;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #212529;
+    }
+
+    .feature-desc {
+      font-size: 0.95rem;
+      color: #6c757d;
+      line-height: 1.6;
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+      padding: 3rem 5%;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      margin: 0 5% 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .steps-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      position: relative;
+    }
+
+    .steps-container::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 100px;
+      width: calc(100% - 200px);
+      height: 2px;
+      background: linear-gradient(to right, #066ac9, #e91e63);
+      z-index: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 25%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #066ac9 0%, #0559a6 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 5px 15px rgba(6, 106, 201, 0.3);
+    }
+
+    .step:nth-child(2) .step-number {
+      background: linear-gradient(135deg, #6f42c1 0%, #6538b5 100%);
+      box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+    }
+
+    .step:nth-child(3) .step-number {
+      background: linear-gradient(135deg, #28a745 0%, #249d3e 100%);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .step:nth-child(4) .step-number {
+      background: linear-gradient(135deg, #e91e63 0%, #d81558 100%);
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #212529;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: #6c757d;
+      line-height: 1.5;
+      max-width: 200px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 0.8rem;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #212529;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1rem;
+      color: #6c757d;
+      margin-bottom: 1rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 80px;
+      }
+
+      .hero-content {
+        max-width: 100%;
+        margin-bottom: 3rem;
+      }
+
+      .hero-image {
+        width: 70%;
+      }
+
+      .features-list {
+        justify-content: center;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .features {
+        flex-direction: column;
+      }
+
+      .feature-card {
+        width: 100%;
+      }
+
+      .steps-container::before {
+        display: none;
+      }
+
+      .steps-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .step {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 60px;
+        background-color: #fff;
+        width: 100%;
+        height: calc(100vh - 60px);
+        flex-direction: column;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .search-box {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .feature-item {
+        flex-basis: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero-image {
+        width: 90%;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+
+      .feature-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Patterns -->
+  <div class="bg-pattern pattern-1"></div>
+  <div class="bg-pattern pattern-2"></div>
+  <div class="bg-pattern pattern-3"></div>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo"><i class="fas fa-book"></i>No<span>ReSt</span></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Notes</a></li>
+        <li><a href="#">Voice</a></li>
+        <li><a href="#">Help</a></li>
+      </ul>
+      <div class="right-menu">
+        <div class="search-box">
+          <input type="text" placeholder="Search notes...">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="profile-icon">A</div>
+      </div>
+      <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <!-- Decorative shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+    
+    <div class="hero-content">
+      <h1>Study smarter with <span class="highlight">voice</span> assistance</h1>
+      <p>Upload, revise, and listen to your notes with our AI-powered voice assistant that reads and interprets your study materials.</p>
+      
+      <div class="features-list">
+        <div class="feature-item">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Upload any notes format</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-microphone-alt"></i>
+          <span>Voice reading assistant</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-brain"></i>
+          <span>Smart interpretation</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-mobile-alt"></i>
+          <span>Access anywhere</span>
+        </div>
+      </div>
+      
+      <div class="buttons">
+        <a href="#" class="btn btn-primary">Upload Notes</a>
+        <a href="#" class="btn btn-outline2">
+          <div class="btn-icon">
+            <i class="fas fa-headphones-alt"></i>
+          </div>
+          <span>Try Voice Assistant</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="hero-image">
+      <img src="/api/placeholder/500/500" alt="Student with headphones studying">
+      <div class="voice-badge">
+        <i class="fas fa-volume-up"></i>
+        <span>Voice Reading</span>
+      </div>
+      <div class="note-badge">
+        <i class="fas fa-file-alt"></i>
+        <span>Smart Notes</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon blue-bg">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <div class="feature-content">
+        <h3 class="feature-title">Easy Notes Upload</h3>
+        <p class="feature-desc">Upload your study notes in various formats including PDF, Word, text files, or even images of handwritten notes. Our system processes everything.</p>
+      </div>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon pink-bg">
+        <i class="fas fa-microphone-alt"></i>
+      </div>
+      <div class="feature-content">
+        <h3 class="feature-title">Voice Assistant Reader</h3>
+        <p class="feature-desc">Listen to your notes read aloud by our natural-sounding voice assistant. Perfect for auditory learners or studying on the go.</p>
+      </div>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon purple-bg">
+        <i class="fas fa-brain"></i>
+      </div>
+      <div class="feature-content">
+        <h3 class="feature-title">Smart Interpretation</h3>
+        <p class="feature-desc">Our AI doesn't just read your notes - it understands them, offering explanations, summaries and answering questions about the content.</p>
+      </div>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon green-bg">
+        <i class="fas fa-sync-alt"></i>
+      </div>
+      <div class="feature-content">
+        <h3 class="feature-title">Revision Made Easy</h3>
+        <p class="feature-desc">Create flashcards, quizzes, and summaries from your notes automatically. Perfect for efficient review sessions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2 class="section-title">How NoReSt Works</h2>
+    <p class="section-subtitle">Get started with your personalized study assistant in just four simple steps</p>
+    
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3 class="step-title">Upload Notes</h3>
+        <p class="step-desc">Upload your study materials in any format through our simple interface</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3 class="step-title">Organize</h3>
+        <p class="step-desc">Categorize and organize your notes by subject, topic, or date</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3 class="step-title">Study</h3>
+        <p class="step-desc">Read or listen to your notes with our voice assistant</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3 class="step-title">Master</h3>
+        <p class="step-desc">Use AI interpretation to fully understand complex topics</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Menu toggle functionality
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      menuToggle.innerHTML = navLinks.classList.contains('open') ? 
+        '<i class="fas fa-times"></i>' :
+        '<i class="fas fa-bars"></i>';
+    });
