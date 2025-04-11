@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speech to Text & Text to Speech</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      padding: 2rem;
+      transition: background-color 0.5s ease;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    h2 {
+      color: white;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #start-btn {
+      background: linear-gradient(45deg, #FF416C, #FF4B2B);
+    }
+
+    #start-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(255, 65, 108, 0.4);
+    }
+
+    #stop-btn {
+      background: linear-gradient(45deg, #36D1DC, #5B86E5);
+    }
+
+    #stop-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(54, 209, 220, 0.4);
+    }
+
+    #speak-btn {
+      background: linear-gradient(45deg, #FF9D2F, #FFAF7B);
+    }
+
+    #speak-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(255, 157, 47, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    button i {
+      margin-right: 8px;
+    }
+
+    .transcript-area {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    #output {
+      color: white;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      word-wrap: break-word;
+      text-align: left;
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    .text-to-speech {
+      margin-top: 2rem;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .text-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: rgba(255, 157, 47, 0.6);
+      box-shadow: 0 0 0 2px rgba(255, 157, 47, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .voice-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    select {
+      padding: 0.5rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: rgba(255, 157, 47, 0.6);
+    }
+
+    label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .mic-animation {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: rgba(255, 65, 108, 0.2);
+      right: 20px;
+      bottom: 20px;
+      display: none;
+    }
+
+    .mic-animation.active {
+      display: block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 65, 108, 0.7);
+      }
+      
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(255, 65, 108, 0);
+      }
+      
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 65, 108, 0);
+      }
+    }
+
+    .helper-text {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .command {
+      font-weight: bold;
+      color: #FF416C;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.7s;
+    }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+      margin: 2rem 0;
+    }
+
+    h3 {
+      color: white;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container fade-in">
+    <h2>Speech & Text Assistant</h2>
+    
+    <!-- Speech Recognition Section -->
+    <h3>Speech to Text</h3>
+    <div class="button-group">
+      <button id="start-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="23"></line>
+          <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+        Start Listening
+      </button>
+      <button id="stop-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="4" width="4" height="16"></rect>
+          <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>
+        Stop Listening
+      </button>
+    </div>
+    
+    <div class="transcript-area">
+      <p id="output">Transcript will appear here...</p>
+      <div class="mic-animation" id="mic-animation"></div>
+    </div>
+    
+    <p class="helper-text">
+      Try saying commands like:
+      <span class="command">"open google"</span>,
+      <span class="command">"change background"</span>,
+      <span class="command">"say hello"</span>, or
+      <span class="command">"read text"</span>
+    </p>
+    
+    <div class="section-divider"></div>
+    
+    <!-- Text to Speech Section -->
+    <h3>Text to Speech</h3>
+    <div class="text-to-speech">
+      <textarea class="text-input" id="text-to-speak" rows="3" placeholder="Enter text to speak..."></textarea>
+      <div class="controls">
+        <div class="voice-controls">
+          <label for="voice-select">Voice:</label>
+          <select id="voice-select"></select>
+        </div>
+        <button id="speak-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          Speak Text
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check browser compatibility
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micAnimation = document.getElementById("mic-animation");
+    const outputArea = document.getElementById("output");
+    const textToSpeak = document.getElementById("text-to-speak");
+    const voiceSelect = document.getElementById("voice-select");
+    
+    // Text to Speech Initialization
+    const synth = window.speechSynthesis;
+    let voices = [];
+
+    function populateVoiceList() {
+      voices = synth.getVoices();
+      voiceSelect.innerHTML = '';
+      
+      voices.forEach((voice, i) => {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.setAttribute('data-lang', voice.lang);
+        option.setAttribute('data-voice-index', i);
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    // Initial population of voice list
+    populateVoiceList();
+    
+    // Chrome loads voices asynchronously
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+    
+    // Speak function
+    function speak(text) {
+      if (synth.speaking) {
+        synth.cancel();
+      }
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      const selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-voice-index');
+      
+      if (selectedOption) {
+        utterance.voice = voices[selectedOption];
+      }
+      
+      synth.speak(utterance);
+      
+      utterance.onend = function() {
+        console.log('Speech synthesis finished');
+      }
+    }
+    
+    // Handle Speak button
+    document.getElementById("speak-btn").addEventListener('click', () => {
+      const text = textToSpeak.value;
+      if (text) {
+        speak(text);
+      }
+    });
+    
+    // Speech Recognition
+    if (!SpeechRecognition) {
+      alert("Speech Recognition API not supported in this browser.");
+      outputArea.textContent = "Speech Recognition not supported in this browser. Please try Chrome, Edge, or Safari.";
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;          // Keep listening
+      recognition.interimResults = true;      // Show interim results
+      recognition.lang = "en-US";             // Language
+
+      let isListening = false;
+
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const result = event.results[i];
+          transcript = result[0].transcript.trim();
+          outputArea.textContent = transcript;
+          
+          if (result.isFinal) {
+            handleVoiceCommand(transcript.toLowerCase());  // Call the command handler
+          }
+        }
+      };
+
+      function handleVoiceCommand(command) {
+        console.log("Command recognized:", command);
+        if (command.includes("open google")) {
+          window.open("https://www.google.com", "_blank");
+          addFeedback("Opening Google...");
+        } else if (command.includes("change background")) {
+          document.body.style.background = getRandomGradient();
+          addFeedback("Changing background color!");
+        } else if (command.includes("say hello")) {
+          speak("Hello! How can I assist you today?");
+          addFeedback("Hello! How can I assist you?");
+        } else if (command.includes("read text") || command.includes("speak text")) {
+          const text = textToSpeak.value;
+          if (text) {
+            speak(text);
+            addFeedback("Reading text...");
+          } else {
+            speak("There is no text to read. Please enter some text in the text area below.");
+            addFeedback("No text to read");
+          }
+        } else {
+          console.log("Command not recognized.");
+        }
+      }
+
+      function addFeedback(message) {
+        const feedback = document.createElement("div");
+        feedback.textContent = "✓ " + message;
+        feedback.style.color = "#4eff91";
+        feedback.style.marginTop = "10px";
+        feedback.style.fontWeight = "bold";
+        outputArea.appendChild(document.createElement("br"));
+        outputArea.appendChild(feedback);
+        
+        setTimeout(() => {
+          if (outputArea.contains(feedback)) {
+            outputArea.removeChild(feedback);
+          }
+        }, 3000);
+      }
+
+      function getRandomGradient() {
+        const gradients = [
+          "linear-gradient(135deg, #43cea2, #185a9d)",
+          "linear-gradient(135deg, #ff6e7f, #bfe9ff)",
+          "linear-gradient(135deg, #c471f5, #fa71cd)",
+          "linear-gradient(135deg, #8e2de2, #4a00e0)",
+          "linear-gradient(135deg, #f46b45, #eea849)"
+        ];
+        return gradients[Math.floor(Math.random() * gradients.length)];
+      }
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        outputArea.textContent = "Error: " + event.error;
+        micAnimation.classList.remove("active");
+        isListening = false;
+      };
+
+      recognition.onend = () => {
+        if (isListening) {
+          recognition.start(); // Restart if it ended unexpectedly
+        } else {
+          micAnimation.classList.remove("active");
+          outputArea.textContent = "Listening stopped.";
+        }
+      };
+
+      document.getElementById("start-btn").onclick = () => {
+        recognition.start();
+        micAnimation.classList.add("active");
+        outputArea.textContent = "Listening...";
+        isListening = true;
+      };
+      
+      document.getElementById("stop-btn").onclick = () => {
+        recognition.stop();
+        micAnimation.classList.remove("active");
+        isListening = false;
+      };
+    }
+  </script>
+</body>
+</html>
