@@ -1,0 +1,26 @@
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+body {
+    background: linear-gradient(270deg, #ff0088, #0080ff);
+    background-size: 400% 400%;
+    animation: gradientMove 5s infinite alternate;
+}
+
+#loadBtn{
+    background-color: aqua;
+    border-radius: 30px;
+}
