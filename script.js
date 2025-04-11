@@ -1,5 +1,22 @@
-function loadText() {
-    fetch('data.txt')
+function loadText(value){
+    if(value==1){
+        load('subject1.txt');
+    }
+    else if{
+        load('subject1.txt');
+    }
+    else if{
+        load('subject1.txt');
+    }
+    else if{
+        load('subject1.txt');
+    }
+    else {
+        load('subject1.txt');
+    }
+}
+function load(file) {
+    fetch(file)
       .then(response => {
         if (!response.ok) throw new Error('File not found.');
         return response.text();
