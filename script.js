@@ -1,5 +1,5 @@
 
-function loadBtn() {
+function loadText() {
     fetch('data.txt')
       .then(response => {
         if (!response.ok) throw new Error('File not found.');
