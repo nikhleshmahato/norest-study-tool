@@ -14,9 +14,26 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        body {
-            background-color: #f5f5f5;
+        @keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+body {
+        background: linear-gradient(270deg, #ff0088, #0080ff);
+        background-size: 400% 400%;
+        animation: gradientMove 5s infinite alternate;
             display: flex;
             justify-content: center;
             align-items: center;
