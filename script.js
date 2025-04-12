@@ -1,18 +1,18 @@
 function loadText(value){
     if(value==1){
-        load('subject1.txt');
+        load('subjects/subject1.txt');
     }
     else if{
-        load('subject1.txt');
+        load('subjects/subject1.txt');
     }
     else if{
-        load('subject1.txt');
+        load('subjects/subject1.txt');
     }
     else if{
-        load('subject1.txt');
+        load('subjects/subject1.txt');
     }
     else {
-        load('subject1.txt');
+        load('subjects/subject1.txt');
     }
 }
 function load(file) {
