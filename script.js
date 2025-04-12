@@ -1,6 +1,6 @@
 
 function loadBtn() {
-    fetch('subjects/subject1.txt')
+    fetch('data.txt')
       .then(response => {
         if (!response.ok) throw new Error('File not found.');
         return response.text();
