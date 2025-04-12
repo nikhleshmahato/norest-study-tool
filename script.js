@@ -1,22 +1,6 @@
-function loadText(value){
-    if(value==1){
-        load('subjects/subject1.txt');
-    }
-    else if{
-        load('subjects/subject1.txt');
-    }
-    else if{
-        load('subjects/subject1.txt');
-    }
-    else if{
-        load('subjects/subject1.txt');
-    }
-    else {
-        load('subjects/subject1.txt');
-    }
-}
-function load(file) {
-    fetch(file)
+
+function loadBtn() {
+    fetch('subjects/subject1.txt')
       .then(response => {
         if (!response.ok) throw new Error('File not found.');
         return response.text();
